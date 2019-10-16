@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+	<html lang="es">
+		<head>
+			<meta charset="UTF-8">
+			<title >Choco ~ Art</title>
+			<link rel="stylesheet" href="css/choco.css">
+			<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="css/img/z.ico">	
+				 <script type="module">
+     
+						  const hilo = new Worker("choco.js"); 
+						  vista.addEventListener("submit",Hilo);
+						  boton.addEventListener("click",Http);
+						  hilo.addEventListener("message", evt => muestraRespuesta(evt.data));
+
+						  function muestraRespuesta(texto) {
+							respuesta.value = texto;
+						  }
+
+						  function Hilo(evt) {
+							evt.preventDefault();
+							const modelo = leeModelo();
+							hilo.postMessage(modelo);
+						  }
+						  function leeModelo() {
+							return {
+							  nom: nom.value.trim(),
+							  area: area.value.trim()
+							};
+						  }
+
+						  function Http() {
+							const modelo = leeModelo();
+						   
+							fetch("nom=" + encodeURIComponent(modelo.nom)
+							  + "&area=" + encodeURIComponent(modelo.area))
+							 
+							  .then(
+							  
+								respuestaHttp => {
+							   
+								  if (respuestaHttp.ok) {
+								   
+									return respuestaHttp.text();
+								  } else {
+								   
+									throw new Error(respuestaHttp.statusText)
+								  }
+								})
+							  .then(texto => muestraRespuesta(texto))
+							  .catch(e => muestraRespuesta(e.message));
+						  }
+				</script>
+		</head>
+		<body>
+
+			<header>
+				<h1> Choco ~ Art</h1>
+				<h4> El Arte de la Chocolateria</h4>
+				<!--<h4 style="color:white;"><center>El Arte de la Chocolateria</center></h4> segunda forma-->
+			</header>
+				<br>
+				<form class="ch" id="vista"><br>
+				  <p><output id="respuesta"></output></p>
+				 
+					<h2 class="b"> ~ REGISTRO EMPLEADO ~</h2><br><br><hr class="x"></hr><br>
+						<p class="a">NOMBRE:</p><input type="text" requires name="nombre" id="nom" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nombre" size="20"><br><br>
+						<p class="a">ÁREA:</p><input type="text" requires name="area" id="area" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Área" size="20" >
+						
+						<br><br><br><button type="submit" onclick="recibir()" class="boton">Hilos</button><br><br>	
+						<button type="button" id="boton" class="boton">Http</button><br><br>
+				</form><br><br>
+				
+				<footer class="etiqueta">Derechos reservado Choco ~ Art & copy@ ~ Pela Angélica Velázquez Nava ~ IC51-V</footer>
+				
+		</body>
+	</html>
